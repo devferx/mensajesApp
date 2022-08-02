@@ -1,3 +1,9 @@
+import { AppRouter } from "./router/AppRouter";
+
 export const ChatApp = () => {
-  return <div>ChatApp</div>
-}
+  return (
+    <div>
+      <AppRouter />
+    </div>
+  );
+};
