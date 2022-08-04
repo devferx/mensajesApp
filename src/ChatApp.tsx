@@ -1,9 +1,10 @@
 import { AppRouter } from "./router/AppRouter";
+import { AuthProvider } from "./auth/AuthContext";
 
 export const ChatApp = () => {
   return (
-    <div>
+    <AuthProvider>
       <AppRouter />
-    </div>
+    </AuthProvider>
   );
 };
