@@ -264,6 +264,7 @@ iframe {
   position: relative;
   padding-left: 26px;
   cursor: pointer;
+  user-select: none;
 }
 
 .label-checkbox100::before {
