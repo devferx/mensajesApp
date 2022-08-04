@@ -5,7 +5,8 @@ import { fetchWithoutToken, baseURL } from "../helpers/fetch";
 import { LoginResponse } from "../interfaces";
 
 interface AuthContextProps {
-  login: (email: string, password: string) => void;
+  auth: AuthState;
+  login: (email: string, password: string) => Promise<boolean>;
   register: (name: string, email: string, password: string) => void;
   verifyToken: () => void;
   logout: () => void;
@@ -17,7 +18,15 @@ interface AuthProvider {
   children: ReactNode;
 }
 
-const initialState = {
+interface AuthState {
+  uid: null | string;
+  checking: boolean;
+  logged: boolean;
+  name: null | string;
+  email: null | string;
+}
+
+const initialState: AuthState = {
   uid: null,
   checking: true,
   logged: false,
@@ -29,12 +38,29 @@ export const AuthProvider = ({ children }: AuthProvider) => {
   const [auth, setAuth] = useState(initialState);
 
   const login = async (email: string, password: string) => {
-    const resp = await fetchWithoutToken.post<LoginResponse>("/login", {
-      email,
-      password,
-    });
+    try {
+      const { data } = await fetchWithoutToken.post<LoginResponse>("/login", {
+        email,
+        password,
+      });
 
-    console.log(resp);
+      if (data.ok) {
+        localStorage.setItem("token", data.token);
+        const { user } = data;
+
+        setAuth({
+          uid: user.uid,
+          checking: false,
+          logged: true,
+          name: user.name,
+          email: user.email,
+        });
+      }
+
+      return data.ok;
+    } catch (error) {
+      return false;
+    }
   };
 
   const register = (name: string, email: string, password: string) => {};
@@ -46,6 +72,7 @@ export const AuthProvider = ({ children }: AuthProvider) => {
   return (
     <AuthContext.Provider
       value={{
+        auth,
         login,
         register,
         verifyToken,
