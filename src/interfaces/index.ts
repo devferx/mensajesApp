@@ -1,4 +1,4 @@
-export interface LoginResponse {
+export interface AuthResponse {
   ok: boolean;
   msg: string;
   user: User;
@@ -10,4 +10,9 @@ export interface User {
   email: string;
   online: boolean;
   uid: string;
+}
+
+export interface AuthFailedResponse {
+  ok: boolean;
+  msg: string;
 }

@@ -1,13 +1,18 @@
 import { createContext, useCallback, useState } from "react";
 import type { ReactNode } from "react";
+import type { AxiosError } from "axios";
 
-import { fetchWithoutToken, baseURL } from "../helpers/fetch";
-import { LoginResponse } from "../interfaces";
+import { fetchWithoutToken } from "../helpers/fetch";
+import { AuthResponse, AuthFailedResponse } from "../interfaces";
 
 interface AuthContextProps {
   auth: AuthState;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (name: string, email: string, password: string) => void;
+  register: (
+    name: string,
+    email: string,
+    password: string
+  ) => Promise<boolean | string>;
   verifyToken: () => void;
   logout: () => void;
 }
@@ -39,7 +44,7 @@ export const AuthProvider = ({ children }: AuthProvider) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const { data } = await fetchWithoutToken.post<LoginResponse>("/login", {
+      const { data } = await fetchWithoutToken.post<AuthResponse>("/login", {
         email,
         password,
       });
@@ -63,7 +68,36 @@ export const AuthProvider = ({ children }: AuthProvider) => {
     }
   };
 
-  const register = (name: string, email: string, password: string) => {};
+  const register = async (name: string, email: string, password: string) => {
+    try {
+      const { data } = await fetchWithoutToken.post<AuthResponse>(
+        "/login/new",
+        {
+          name,
+          email,
+          password,
+        }
+      );
+
+      if (data.ok) {
+        localStorage.setItem("token", data.token);
+        const { user } = data;
+
+        setAuth({
+          uid: user.uid,
+          checking: false,
+          logged: true,
+          name: user.name,
+          email: user.email,
+        });
+      }
+
+      return data.ok;
+    } catch (error) {
+      const err = error as AxiosError<AuthFailedResponse>;
+      return err.response?.data.msg ?? err.message;
+    }
+  };
 
   const verifyToken = useCallback(() => {}, []);
 
