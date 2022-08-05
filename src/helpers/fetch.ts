@@ -6,3 +6,10 @@ export const baseURL =
 export const fetchWithoutToken = axios.create({
   baseURL,
 });
+
+export const fetchWithToken = axios.create({
+  baseURL,
+  headers: {
+    "x-token": localStorage.getItem("token") || "",
+  },
+});

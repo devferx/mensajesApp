@@ -16,3 +16,5 @@ export interface AuthFailedResponse {
   ok: boolean;
   msg: string;
 }
+
+export interface RevalidateTokenResponse extends Omit<AuthResponse, "msg"> {}

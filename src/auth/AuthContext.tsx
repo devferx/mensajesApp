@@ -2,8 +2,12 @@ import { createContext, useCallback, useState } from "react";
 import type { ReactNode } from "react";
 import type { AxiosError } from "axios";
 
-import { fetchWithoutToken } from "../helpers/fetch";
-import { AuthResponse, AuthFailedResponse } from "../interfaces";
+import { fetchWithoutToken, fetchWithToken } from "../helpers/fetch";
+import {
+  AuthResponse,
+  AuthFailedResponse,
+  RevalidateTokenResponse,
+} from "../interfaces";
 
 interface AuthContextProps {
   auth: AuthState;
@@ -13,7 +17,7 @@ interface AuthContextProps {
     email: string,
     password: string
   ) => Promise<boolean | string>;
-  verifyToken: () => void;
+  verifyToken: () => Promise<boolean>;
   logout: () => void;
 }
 
@@ -99,7 +103,36 @@ export const AuthProvider = ({ children }: AuthProvider) => {
     }
   };
 
-  const verifyToken = useCallback(() => {}, []);
+  const verifyToken = useCallback(async (): Promise<boolean> => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setAuth({ ...initialState, checking: false });
+      return false;
+    }
+
+    const { data } = await fetchWithToken.get<RevalidateTokenResponse>(
+      "/login/renew"
+    );
+
+    if (!data.ok) {
+      setAuth({ ...initialState, checking: false });
+      return false;
+    }
+
+    localStorage.setItem("token", data.token);
+    const { user } = data;
+
+    setAuth({
+      uid: user.uid,
+      checking: false,
+      logged: true,
+      name: user.name,
+      email: user.email,
+    });
+    console.log(">>> authenticated");
+    return true;
+  }, []);
 
   const logout = () => {};
 
