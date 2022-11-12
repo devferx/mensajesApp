@@ -32,8 +32,6 @@ export const RegisterPage = () => {
     if (typeof msg == "string") {
       return Swal.fire("Error", msg.toString(), "error");
     }
-
-    console.log(">>>> Registrado");
   };
 
   return (

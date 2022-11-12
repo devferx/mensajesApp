@@ -130,7 +130,6 @@ export const AuthProvider = ({ children }: AuthProvider) => {
       name: user.name,
       email: user.email,
     });
-    console.log(">>> authenticated");
     return true;
   }, []);
 
