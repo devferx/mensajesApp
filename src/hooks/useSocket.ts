@@ -7,10 +7,15 @@ export const useSocket = (serverPath: string) => {
   const [online, setOnline] = useState(false);
 
   const connectSocket = useCallback(() => {
+    const token = localStorage.getItem("token");
+
     const socketTemp = connect(serverPath, {
       transports: ["websocket"],
       autoConnect: true,
       forceNew: true,
+      query: {
+        "x-token": token,
+      },
     });
 
     setSocket(socketTemp);
