@@ -2,8 +2,10 @@ import { createContext, useEffect, useContext } from "react";
 import type { ReactNode } from "react";
 import type { Socket } from "socket.io-client";
 
-import { useSocket } from "../hooks/useSocket";
 import { AuthContext } from "../auth/AuthContext";
+import { ChatContext } from "./chat/ChatContext";
+import { useSocket } from "../hooks/useSocket";
+
 import type { User } from "../interfaces/index";
 
 interface SocketContextProps {
@@ -21,6 +23,7 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     "http://localhost:3001"
   );
   const { auth } = useContext(AuthContext);
+  const { dispatch } = useContext(ChatContext);
 
   useEffect(() => {
     if (auth.logged) {
@@ -36,9 +39,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
 
   useEffect(() => {
     socket?.on("user-list", (users: User[]) => {
-      console.log(users);
+      dispatch({
+        type: "[CHAT] USERS_LOADED",
+        payload: users,
+      });
     });
-  }, [socket]);
+  }, [socket, dispatch]);
 
   return (
     <SocketContext.Provider value={{ socket, online }}>
