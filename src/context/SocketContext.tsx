@@ -4,6 +4,7 @@ import type { Socket } from "socket.io-client";
 
 import { useSocket } from "../hooks/useSocket";
 import { AuthContext } from "../auth/AuthContext";
+import type { User } from "../interfaces/index";
 
 interface SocketContextProps {
   socket: Socket | undefined;
@@ -32,6 +33,12 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
       disconnectSocket();
     }
   }, [auth, disconnectSocket]);
+
+  useEffect(() => {
+    socket?.on("user-list", (users: User[]) => {
+      console.log(users);
+    });
+  }, [socket]);
 
   return (
     <SocketContext.Provider value={{ socket, online }}>
