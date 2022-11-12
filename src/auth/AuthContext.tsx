@@ -134,7 +134,13 @@ export const AuthProvider = ({ children }: AuthProvider) => {
     return true;
   }, []);
 
-  const logout = () => {};
+  const logout = () => {
+    localStorage.removeItem("token");
+    setAuth({
+      ...initialState,
+      checking: false,
+    });
+  };
 
   return (
     <AuthContext.Provider
