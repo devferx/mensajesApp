@@ -1,10 +1,13 @@
 import { AppRouter } from "./router/AppRouter";
 import { AuthProvider } from "./auth/AuthContext";
+import { SocketProvider } from "./auth/SocketContext";
 
 export const ChatApp = () => {
   return (
     <AuthProvider>
-      <AppRouter />
+      <SocketProvider>
+        <AppRouter />
+      </SocketProvider>
     </AuthProvider>
   );
 };
