@@ -1,6 +1,6 @@
 import { AppRouter } from "./router/AppRouter";
 import { AuthProvider } from "./auth/AuthContext";
-import { SocketProvider } from "./auth/SocketContext";
+import { SocketProvider } from "./context/SocketContext";
 
 export const ChatApp = () => {
   return (
