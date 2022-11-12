@@ -1,32 +1,41 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { connect } from "socket.io-client";
+import type { Socket } from "socket.io-client";
 
 export const useSocket = (serverPath: string) => {
-  const socket = useMemo(
-    () =>
-      connect(serverPath, {
-        transports: ["websocket"],
-      }),
-    [serverPath]
-  );
+  const [socket, setSocket] = useState<Socket>();
   const [online, setOnline] = useState(false);
 
-  useEffect(() => {
-    setOnline(socket.connected);
+  const connectSocket = useCallback(() => {
+    const socketTemp = connect(serverPath, {
+      transports: ["websocket"],
+      autoConnect: true,
+      forceNew: true,
+    });
+
+    setSocket(socketTemp);
+  }, [serverPath]);
+
+  const disconnectSocket = useCallback(() => {
+    socket?.disconnect();
   }, [socket]);
 
   useEffect(() => {
-    socket.on("connect", () => {
+    setOnline(socket?.connected || false);
+  }, [socket]);
+
+  useEffect(() => {
+    socket?.on("connect", () => {
       setOnline(true);
     });
 
     return () => {
-      socket.off();
+      socket?.off();
     };
   }, [socket]);
 
   useEffect(() => {
-    socket.on("disconnect", () => {
+    socket?.on("disconnect", () => {
       setOnline(false);
     });
   }, [socket]);
@@ -34,5 +43,7 @@ export const useSocket = (serverPath: string) => {
   return {
     socket,
     online,
+    connectSocket,
+    disconnectSocket,
   };
 };
