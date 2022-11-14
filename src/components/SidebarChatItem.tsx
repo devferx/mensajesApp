@@ -1,3 +1,7 @@
+import { useContext } from "react";
+
+import { ChatContext } from "../context/chat/ChatContext";
+
 import type { User } from "../interfaces";
 
 interface SidebarChatItemProps {
@@ -5,9 +9,21 @@ interface SidebarChatItemProps {
 }
 
 export const SidebarChatItem = ({ user }: SidebarChatItemProps) => {
+  const { chatState, dispatch } = useContext(ChatContext);
+  const { activeChat } = chatState;
+
+  const onClick = () => {
+    dispatch({
+      type: "[CHAT] ACTIVATE_CHAT",
+      payload: user.uid,
+    });
+  };
+
   return (
-    <div className="chat_list">
-      {/* active_chat */}
+    <div
+      className={`chat_list ${user.uid === activeChat ? "active_chat" : ""} `}
+      onClick={onClick}
+    >
       <div className="chat_people">
         <div className="chat_img">
           <img
