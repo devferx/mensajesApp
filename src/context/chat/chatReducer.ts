@@ -4,7 +4,8 @@ import { ChatState } from "./ChatContext";
 export type ChatAction =
   | { type: "[CHAT] USERS_LOADED"; payload: User[] }
   | { type: "[CHAT] ACTIVATE_CHAT"; payload: string }
-  | { type: "[CHAT] NEW_MESSAGE"; payload: Message };
+  | { type: "[CHAT] NEW_MESSAGE"; payload: Message }
+  | { type: "[CHAT] LOAD_MESSAGES"; payload: Message[] };
 
 export function chatReducer(state: ChatState, action: ChatAction): ChatState {
   switch (action.type) {
@@ -33,6 +34,11 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
       } else {
         return state;
       }
+    case "[CHAT] LOAD_MESSAGES":
+      return {
+        ...state,
+        messages: [...action.payload],
+      };
     default:
       return state;
   }

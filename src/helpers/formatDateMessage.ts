@@ -1,6 +1,6 @@
 export function formatDateMessage(dateString: string) {
   const date = new Date(dateString);
-  console.log({ date });
+
   const res = new Intl.DateTimeFormat("es-ES", {
     hour: "2-digit",
     minute: "numeric",

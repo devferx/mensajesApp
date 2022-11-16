@@ -2,7 +2,9 @@ import { useContext } from "react";
 
 import { ChatContext } from "../context/chat/ChatContext";
 
-import type { User } from "../interfaces";
+import { fetchWithToken } from "../helpers/fetch";
+
+import type { Message, User } from "../interfaces";
 
 interface SidebarChatItemProps {
   user: User;
@@ -12,11 +14,21 @@ export const SidebarChatItem = ({ user }: SidebarChatItemProps) => {
   const { chatState, dispatch } = useContext(ChatContext);
   const { activeChat } = chatState;
 
-  const onClick = () => {
+  const onClick = async () => {
     dispatch({
       type: "[CHAT] ACTIVATE_CHAT",
       payload: user.uid,
     });
+
+    // Cargar los mensajes del Chat
+    const { data } = await fetchWithToken(`/messages/${user.uid}`);
+
+    dispatch({
+      type: "[CHAT] LOAD_MESSAGES",
+      payload: data.messages.reverse() as Message[],
+    });
+
+    // TODO: Move scroll
   };
 
   return (
