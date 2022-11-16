@@ -1,8 +1,9 @@
-import { createContext, useCallback, useState } from "react";
+import { createContext, useCallback, useState, useContext } from "react";
 import type { ReactNode } from "react";
 import type { AxiosError } from "axios";
 
 import { fetchWithoutToken, fetchWithToken } from "../helpers/fetch";
+import { ChatContext } from "../context/chat/ChatContext";
 import {
   AuthResponse,
   AuthFailedResponse,
@@ -45,6 +46,7 @@ const initialState: AuthState = {
 
 export const AuthProvider = ({ children }: AuthProvider) => {
   const [auth, setAuth] = useState(initialState);
+  const { dispatch } = useContext(ChatContext);
 
   const login = async (email: string, password: string) => {
     try {
@@ -135,6 +137,11 @@ export const AuthProvider = ({ children }: AuthProvider) => {
 
   const logout = () => {
     localStorage.removeItem("token");
+
+    dispatch({
+      type: "[CHAT] LOGOUT",
+    });
+
     setAuth({
       ...initialState,
       checking: false,

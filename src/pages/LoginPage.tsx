@@ -9,7 +9,7 @@ export const LoginPage = () => {
   const { login } = useContext(AuthContext);
   const [form, setForm] = useState({
     email: "",
-    password: "123456",
+    password: "",
     rememberMe: true,
   });
   const isFormComplete = form.email.length > 0 && form.password.length > 0;
