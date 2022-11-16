@@ -6,7 +6,7 @@ import { AuthContext } from "../auth/AuthContext";
 import { ChatContext } from "./chat/ChatContext";
 import { useSocket } from "../hooks/useSocket";
 
-import type { User } from "../interfaces/index";
+import type { Message, User } from "../interfaces/index";
 
 interface SocketContextProps {
   socket: Socket | undefined;
@@ -47,12 +47,14 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
   }, [socket, dispatch]);
 
   useEffect(() => {
-    socket?.on("private-message", (message) => {
-      console.log(message);
-      // TODO: Dispatch of action
+    socket?.on("private-message", (message: Message) => {
+      dispatch({
+        type: "[CHAT] NEW_MESSAGE",
+        payload: message,
+      });
       // TODO: Move scroll
     });
-  }, [socket]);
+  }, [socket, dispatch]);
 
   return (
     <SocketContext.Provider value={{ socket, online }}>

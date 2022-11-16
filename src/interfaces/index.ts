@@ -17,4 +17,13 @@ export interface AuthFailedResponse {
   msg: string;
 }
 
+export interface Message {
+  from: string;
+  to: string;
+  message: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface RevalidateTokenResponse extends Omit<AuthResponse, "msg"> {}

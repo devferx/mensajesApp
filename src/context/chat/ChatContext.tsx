@@ -2,13 +2,13 @@ import { createContext, useReducer } from "react";
 import type { ReactNode, Dispatch } from "react";
 
 import { chatReducer, ChatAction } from "./chatReducer";
-import { User } from "../../interfaces";
+import { Message, User } from "../../interfaces";
 
 export interface ChatState {
   uid: string;
   activeChat: string | null;
   users: User[];
-  messages: any[];
+  messages: Message[];
 }
 
 const initialState: ChatState = {
