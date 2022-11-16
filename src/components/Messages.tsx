@@ -1,9 +1,11 @@
+import { useContext } from "react";
+
+import { ChatContext } from "../context/chat/ChatContext";
+import { AuthContext } from "../auth/AuthContext";
+
 import { OutgoingMessage } from "./OutgoingMessage";
 import { SendMessage } from "./SendMessage";
 import { IncomingMessage } from "./IncomingMessage";
-import { useContext } from "react";
-import { ChatContext } from "../context/chat/ChatContext";
-import { AuthContext } from "../auth/AuthContext";
 
 export const Messages = () => {
   const { chatState } = useContext(ChatContext);
