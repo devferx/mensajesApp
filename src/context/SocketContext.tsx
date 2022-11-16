@@ -7,6 +7,10 @@ import { ChatContext } from "./chat/ChatContext";
 import { useSocket } from "../hooks/useSocket";
 
 import type { Message, User } from "../interfaces/index";
+import {
+  scrollToBottom,
+  scrollToBottomAnimated,
+} from "../helpers/scrollToBottom";
 
 interface SocketContextProps {
   socket: Socket | undefined;
@@ -52,7 +56,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
         type: "[CHAT] NEW_MESSAGE",
         payload: message,
       });
-      // TODO: Move scroll
+
+      scrollToBottomAnimated("messages");
     });
   }, [socket, dispatch]);
 

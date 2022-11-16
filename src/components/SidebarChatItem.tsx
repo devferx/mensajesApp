@@ -5,6 +5,7 @@ import { ChatContext } from "../context/chat/ChatContext";
 import { fetchWithToken } from "../helpers/fetch";
 
 import type { Message, User } from "../interfaces";
+import { scrollToBottom } from "../helpers/scrollToBottom";
 
 interface SidebarChatItemProps {
   user: User;
@@ -28,7 +29,7 @@ export const SidebarChatItem = ({ user }: SidebarChatItemProps) => {
       payload: data.messages.reverse() as Message[],
     });
 
-    // TODO: Move scroll
+    scrollToBottom("messages");
   };
 
   return (

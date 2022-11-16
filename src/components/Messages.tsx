@@ -14,7 +14,7 @@ export const Messages = () => {
   return (
     <div className="mesgs">
       {/* <!-- Historia inicio --> */}
-      <div className="msg_history">
+      <div id="messages" className="msg_history">
         {chatState.messages.map((msg) =>
           msg.to === auth.uid ? (
             <IncomingMessage key={`chat-${msg._id}`} message={msg} />
@@ -22,19 +22,10 @@ export const Messages = () => {
             <OutgoingMessage key={`chat-${msg._id}`} message={msg} />
           )
         )}
-        {/* <!-- Mensaje recibido Inicio --> */}
-
-        {/* <!-- Mensaje recibido Fin --> */}
-
-        {/* <!-- Mensaje enviado inicio --> */}
-
-        {/* <!-- Mensaje enviado inicio --> */}
       </div>
       {/* <!-- Historia Fin --> */}
 
-      {/* <!-- Enviar mensaje Inicio --> */}
       <SendMessage />
-      {/* <!-- Enviar mensaje Fin --> */}
     </div>
   );
 };
